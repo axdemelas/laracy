@@ -11,8 +11,13 @@ ARG PHP_CLI_EXTENSIONS
 RUN if [ -n "$PHP_CLI_EXTENSIONS" ]; then install-php-extensions $PHP_CLI_EXTENSIONS; fi
 
 ARG NODE_VERSION=16
-RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - \
-    && apt-get update && apt-get install -y nodejs python \
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    zip \
+    unzip \
+    nodejs \
+    python \
     ; \
     rm -rf /var/lib/apt/lists/*
 

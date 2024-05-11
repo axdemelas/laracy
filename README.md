@@ -44,6 +44,7 @@ $ laracy node --version
 $ laracy npm --version
 $ laracy python --version
 
+$ laracy composer create-project --prefer-dist laravel/laravel . "5.5.*"
 $ laracy composer install
 $ laracy npm install
 $ laracy npm run prod
@@ -93,19 +94,21 @@ SOURCE_PATH=./my-custom-dir
 # PHP CLI version.
 PHP_CLI_VERSION=7.3
 
-# PHP FPM version (server).
+# PHP FPM version.
 PHP_FPM_VERSION=7.3
 
 # Node.JS version on CLI.
 NODE_VERSION=16
 
 # List of PHP extensions to be installed on CLI.
-PHP_CLI_EXTENSIONS=gd xdebug zip
+# Refer: https://github.com/mlocati/docker-php-extension-installer
+PHP_CLI_EXTENSIONS=gd xdebug
 
-# List of PHP extensions to be installed on PHP-FPM (server).
-PHP_FPM_EXTENSIONS=gd zip
+# List of PHP extensions to be installed on PHP-FPM.
+# Refer: https://github.com/mlocati/docker-php-extension-installer
+PHP_FPM_EXTENSIONS=gd
 
-# Nginx port (server).
+# Nginx server port.
 NGINX_PORT=80
 ```
 
