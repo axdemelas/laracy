@@ -33,7 +33,7 @@ alias laracy='$(
 )'
 ```
 
-> This alias ensures `laracy` to work under multiple folder structures. Feel free to change it.
+> This ensures `laracy` to work under multiple folder structures. Feel free to change it.
 
 Reload the terminal and try it out:
 
