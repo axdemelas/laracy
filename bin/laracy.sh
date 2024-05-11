@@ -11,7 +11,7 @@ function server() {
 function run() {
   args="$@"
 
-  part1="${args% --*}"
+  part1="${args% -- *}"
   part2="${args#* -- }"
 
   if [[ $part1 == $part2 ]]; then
