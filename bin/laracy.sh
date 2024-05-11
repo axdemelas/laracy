@@ -1,11 +1,18 @@
 #!/bin/bash
 
+compose_file="$(dirname $(realpath $0))/../compose.yml"
+
+if ! [[ -f $compose_file ]]; then
+  echo "Laracy: the \"compose.yml\" file was not found"
+  exit 1
+fi
+
 function cli() {
-  docker compose --profile cli $@
+  docker compose -f "$compose_file" --profile cli $@
 }
 
 function server() {
-  docker compose --profile server $@
+  docker compose -f "$compose_file" --profile server $@
 }
 
 function run() {
@@ -15,9 +22,9 @@ function run() {
   part2="${args#* -- }"
 
   if [[ $part1 == $part2 ]]; then
-    docker compose run --rm laracy_cli $@
+    docker compose -f "$compose_file" run --rm laracy_cli $@
   else
-    docker compose run --rm \
+    docker compose -f "$compose_file" run --rm \
       $part1 laracy_cli $part2
   fi
 }

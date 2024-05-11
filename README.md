@@ -21,11 +21,19 @@ $ laracy -p 8000:8000 -- php artisan serve
 
 ## Getting Started
 
-Add the alias to your `.bashrc`:
+Add the `laracy` shell alias to your `.zshrc` or `.bashrc`:
 
 ```sh
-alias laracy='bin/laracy.sh'
+alias laracy='$(
+  if [ -f laracy/bin/laracy.sh ]; then echo laracy/bin/laracy.sh; \
+  elif [ -f ../laracy/bin/laracy.sh ]; then echo ../laracy/bin/laracy.sh; \
+  elif [ -f ../bin/laracy.sh ]; then echo ../bin/laracy.sh; \
+  else echo bin/laracy.sh; \
+  fi \
+)'
 ```
+
+> This alias ensures `laracy` to work under multiple folder structures. Feel free to change it.
 
 Reload the terminal and try it out:
 
