@@ -72,7 +72,7 @@ $ laracy cli up
 $ laracy cli stop
 $ laracy cli down
 
-# The Server is a container for  HTTP serving with PHP-FPM and
+# The Server is a container for HTTP serving with PHP-FPM and
 # Nginx as reverse proxy. To manipulate it:
 $ laracy server build
 $ laracy server build --no-cache
