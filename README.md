@@ -36,6 +36,7 @@ $ laracy help
 ## Common Commands
 
 ```sh
+$ laracy ls /app
 $ laracy php --version
 $ laracy php -m
 $ laracy composer --version
@@ -86,6 +87,9 @@ $ laracy server down
 Create a `.env` file in the root of the project and set the variables:
 
 ```dotenv
+# Path to the Laravel app.
+SOURCE_PATH=./my-custom-dir
+
 # PHP CLI version.
 PHP_CLI_VERSION=7.3
 

@@ -12,7 +12,7 @@ services:
     profiles:
       - cli
     volumes:
-      - ./src:/app
+      - ${SOURCE_PATH:-./src}:/app
   laracy_server:
     container_name: laracy_server
     build:
@@ -27,4 +27,4 @@ services:
     profiles:
       - server
     volumes:
-      - ./src:/var/www/html/laravel
+      - ${SOURCE_PATH:-./src}:/var/www/html/laravel
