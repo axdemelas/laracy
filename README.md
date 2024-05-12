@@ -152,7 +152,7 @@ $ docker compose exec laracy_server sh -c "php-fpm -v"
 
 ## Do You Really Need This?
 
-Probably no. This is an **experimental** repository.
+Probably not. This is an **experimental** repository.
 
 It simply abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
 
