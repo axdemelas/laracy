@@ -1,11 +1,27 @@
 #!/bin/bash
 
-compose_file="$(dirname $(realpath $0))/../compose.yml"
+root_folder="$(realpath $(dirname $(realpath $0))/..)"
+bin_folder="$root_folder/bin"
+compose_file="$root_folder/compose.yml"
 
 if ! [[ -f $compose_file ]]; then
   echo "Laracy: the \"compose.yml\" file was not found"
   exit 1
 fi
+
+function action() {
+  case $1 in
+  "integrate")
+    sh "$bin_folder/action-integrate.sh" ${@:2}
+    ;;
+  "deploy")
+    sh "$bin_folder/action-deploy.sh" ${@:2}
+    ;;
+  *)
+    echo "Invalid action."
+    ;;
+  esac
+}
 
 function cli() {
   docker compose -f "$compose_file" --profile cli $@
@@ -30,37 +46,42 @@ function run() {
 }
 
 function help() {
-  printf "\nUsage: laracy COMMAND [SERVICE...]\n"
-  printf "\nBuild, run and serve legacy Laravel projects\n"
-  printf "\nCommon Commands:\n"
-  printf "    php [OPTIONS]\n"
-  printf "    composer [OPTIONS]\n"
-  printf "    node [OPTIONS]\n"
-  printf "    npm [OPTIONS]\n"
-  printf "    python [OPTIONS]\n"
-  printf "\nCommon Services:\n"
-  printf "    cli [OPTIONS] COMMAND\n"
-  printf "    server [OPTIONS] COMMAND\n"
-  printf "    help\n"
-  printf "\nAll commands relies on Docker Compose.\n"
-  printf "\n"
+  cat <<EOF
+
+  Usage: laracy COMMAND [SERVICE...]
+
+  Build, run and serve legacy Laravel projects
+
+  Common Commands:
+      php [OPTIONS]
+      composer [OPTIONS]
+      node [OPTIONS]
+      npm [OPTIONS]
+      python [OPTIONS]
+
+  Common Services:
+      action [OPTIONS] COMMAND
+      cli [OPTIONS] COMMAND
+      server [OPTIONS] COMMAND
+      help|-h|usage
+
+  All commands relies on Docker Compose.
+
+EOF
 }
 
 case $1 in
+"action")
+  action ${@:2}
+  ;;
 "cli")
-  cli ${@#cli}
+  cli ${@:2}
   ;;
 "server")
-  server ${@#server}
+  server ${@:2}
   ;;
-"help")
+"help" | "-h" | "usage")
   help
-  ;;
-"-h")
-  help
-  ;;
-"docker")
-  docker $@
   ;;
 *)
   run $@

@@ -1,0 +1,19 @@
+- Build CLI Docker Image: cli build
+
+- Install Composer Dependencies: composer install --no-interaction --prefer-dist
+
+# - Run static analysis with PHPStan: /app/vendor/bin/phpstan analyze
+
+# - Check linting: php artisan lint
+
+# - Check code formatting: php-cs-fixer fix --diff --dry-run
+
+# - Run Laravel Tests: php artisan test
+
+- Install NPM Dependencies: npm install
+
+# - Run NPM Lint: npm lint
+
+# - Run NPM Test: npm test
+
+- Compiling assets: npm run prod

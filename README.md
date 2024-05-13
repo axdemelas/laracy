@@ -150,6 +150,83 @@ $ docker compose exec laracy_server sh -c "php-fpm -v"
 # PHP 7.1 (fpm)
 ```
 
+## Creating Local CI Pipelines
+
+You can define and run CI Pipelines bounded to the `laracy` command.
+
+First, create a simple YML file under `./pipelines/integrate` directory describing the steps for automated execution. For example:
+
+```yml
+- Build CLI Docker Image: cli build
+
+- Install Composer Dependencies: composer install --no-interaction --prefer-dist
+
+# - Run static analysis with PHPStan: /app/vendor/bin/phpstan analyze
+
+# - Check linting: php artisan lint
+
+# - Check code formatting: php-cs-fixer fix --diff --dry-run
+
+# - Run Laravel Tests: php artisan test
+
+- Install NPM Dependencies: npm install
+
+# - Run NPM Lint: npm lint
+
+# - Run NPM Test: npm test
+
+- Compiling assets: npm run prod
+```
+
+And then execute:
+
+```sh
+$ laracy action integrate
+
+# Integration Pipeline: Starting execution of "default"...
+
+# |-----------------------------------------------
+# | Step 1: Build CLI Docker Image
+# |-----------------------------------------------
+# ...
+# [Step 1]: Completed!
+
+# |-----------------------------------------------
+# | Step 2: Install Composer Dependencies
+# |-----------------------------------------------
+# ...
+# [Step 2]: Completed!
+
+# |-----------------------------------------------
+# | Step 3: Install NPM Dependencies
+# |-----------------------------------------------
+# ...
+# [Step 3]: Completed!
+
+# |-----------------------------------------------
+# | Step 4: Compiling assets
+# |-----------------------------------------------
+# ...
+# [Step 4]: Completed!
+
+# Integration Pipeline: "default" has finished its execution.
+```
+
+### Custom Pipelines
+
+Create files for specific pipelines and execute it passing the name on `--pipeline` parameter:
+
+```sh
+# Starts the execution of "pipelines/integrate/default.yml"
+$ laracy action integrate
+
+# Starts the execution of "pipelines/integrate/frontend.yml"
+$ laracy action integrate --pipeline frontend
+
+# Starts the execution of "pipelines/integrate/backend.yml"
+$ laracy action integrate -p backend
+```
+
 ## Do You Really Need This?
 
 Probably not. This is an **experimental** repository.
