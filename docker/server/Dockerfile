@@ -21,3 +21,9 @@ COPY ./start-server.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/start-server.sh
 
 ENTRYPOINT [ "start-server.sh" ]
+
+FROM laracy_server AS laracy_integrate_server
+
+COPY --from=source_path . .
+
+CMD [ "tail", "-f", "/dev/null" ]

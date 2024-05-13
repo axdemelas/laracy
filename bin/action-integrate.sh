@@ -1,18 +1,11 @@
 #!/bin/bash
 
-ctrl_c() {
-    printf "\n\n|------------------------------------------------------------------\n"
-    printf "| Integration Pipeline: Exiting due to user interruption."
-    printf "\n|------------------------------------------------------------------\n"
-    exit 1
-}
-
-trap ctrl_c SIGINT
-
 root_folder="$(realpath $(dirname $(realpath $0))/..)"
+compose_file="$root_folder/compose.yml"
 pipelines_folder="$root_folder/pipelines/integrate"
 
 pipeline=default
+build=cli
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -22,6 +15,13 @@ while [[ $# -gt 0 ]]; do
             ;;
         --pipeline=*|-p=*)
             pipeline="${1#*=}"
+            ;;
+        --build|-b)
+            shift
+            build="$1"
+            ;;
+        --build=*|-b=*)
+            build="${1#*=}"
             ;;
         *) # Ignore other arguments
             ;;
@@ -34,12 +34,15 @@ if ! [[ -f "$pipelines_folder/$pipeline.yml" ]]; then
     exit 1
 fi
 
-printf "\nIntegration Pipeline: Starting execution of \"$pipeline\"...\n"
+if [[ $build != "cli" ]] && [[ $build != "server" ]]; then
+    echo "Invalid build option \"$build\". Choose between \"cli\" or \"server\""
+    exit 1
+fi
 
 steps_string=$(cat "$pipelines_folder/$pipeline.yml")
 
 IFS=$'\n'
-count=1
+count=0
 
 for line in $steps_string; do
 
@@ -59,23 +62,37 @@ for line in $steps_string; do
     fi
 done
 
+primary_color="\033[0;35m"
+end_color="\033[0m"
+
 bold=$(tput bold)
-normal=$(tput sgr0)
+end_bold=$(tput sgr0)
 
-for ((i=1; i<=${#steps_array[@]}; i++)); do
+ctrl_c() {
+    printf "\n${primary_color}${bold}Laracy Integrate:${end_bold}${end_color} Exiting due to user interruption\n\n"
+    exit 1
+}
+
+trap ctrl_c SIGINT
+
+printf "\n${primary_color}${bold}Laracy Integrate:${end_bold}${end_color} Executing ${bold}$pipeline${end_bold} pipeline with ${bold}$count${end_bold} steps on a ${bold}"$build"${end_bold}-based image\n\n"
+
+docker compose -f "$compose_file" --profile integrate_$build up laracy_integrate_$build -d --build
+
+for ((i=0; i<${#steps_array[@]}; i++)); do
+    number=$(( $i + 1 ))
     step=${steps_array[$i]}
+    command="${commands_array[$i]}"
 
-    printf "\n\033[0;35m|-----------------------------------------------\033[0m\n"
-    printf "\033[0;35m| Step $i:\033[0m ${bold}$step${normal}"
-    printf "\n\033[0;35m|-----------------------------------------------\033[0m\n"
+    printf "\n${primary_color}${bold}Step $number:${end_bold}${end_color} $step\n\n"
 
-    printf "\n"
+    sh -c "docker compose -f \""$compose_file"\" exec laracy_integrate_$build sh -c \""$command"\""
 
-    command=${commands_array[$i]}
-
-    sh -c "$root_folder/bin/laracy.sh $command"
-
-    printf "\n\033[0;35m[Step $i]:\033[0m ${bold}Completed!${normal}\n"
+    printf "\n${primary_color}${bold}Step $number:${end_bold}${end_color} ${bold}Completed${end_bold}\n"
 done
 
-printf "\nIntegration Pipeline: \"$pipeline\" has finished its execution.\n\n"
+printf "\n"
+
+docker compose -f "$compose_file" --profile integrate_$build down laracy_integrate_$build
+
+printf "\n${primary_color}${bold}Laracy Integrate:${end_bold}${end_color} Execution of ${bold}$pipeline${end_bold} pipeline has finished!\n\n"

@@ -1,6 +1,2 @@
-bin/pipelines/integrate/*
-
-!bin/pipelines/integrate/default.yml
-
 .env
 src

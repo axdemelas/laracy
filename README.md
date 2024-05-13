@@ -152,12 +152,12 @@ $ docker compose exec laracy_server sh -c "php-fpm -v"
 
 ## Creating Local CI Pipelines
 
-You can define and run CI Pipelines bounded to the `laracy` command.
+You can define and run CI Pipelines bounded to the `laracy` CLI and Server containers.
 
 First, create a simple YML file under `./pipelines/integrate` directory describing the steps for automated execution. For example:
 
 ```yml
-- Build CLI Docker Image: cli build
+- Welcome: echo \"Hello, default pipeline!\"
 
 - Install Composer Dependencies: composer install --no-interaction --prefer-dist
 
@@ -183,48 +183,43 @@ And then execute:
 ```sh
 $ laracy action integrate
 
-# Integration Pipeline: Starting execution of "default"...
+# Laracy Integrate: Executing default pipeline with 4 steps on a cli-based image
 
-# |-----------------------------------------------
-# | Step 1: Build CLI Docker Image
-# |-----------------------------------------------
+# Step 1: Welcome
 # ...
-# [Step 1]: Completed!
+# Step 1: Completed
 
-# |-----------------------------------------------
-# | Step 2: Install Composer Dependencies
-# |-----------------------------------------------
+# Step 2: Install Composer Dependencies
 # ...
-# [Step 2]: Completed!
+# Step 2: Completed
 
-# |-----------------------------------------------
-# | Step 3: Install NPM Dependencies
-# |-----------------------------------------------
+# Step 3: Install NPM Dependencies
 # ...
-# [Step 3]: Completed!
+# Step 3: Completed
 
-# |-----------------------------------------------
-# | Step 4: Compiling assets
-# |-----------------------------------------------
+# Step 4: Compiling assets
 # ...
-# [Step 4]: Completed!
+# Step 4: Completed
 
-# Integration Pipeline: "default" has finished its execution.
+# Laracy Integrate: Execution of default pipeline has finished!
 ```
 
 ### Custom Pipelines
 
-Create files for specific pipelines and execute it passing the name on `--pipeline` parameter:
+Create files for specific pipelines and execute them passing `--pipeline` and `--build` parameters:
 
 ```sh
-# Starts the execution of "pipelines/integrate/default.yml"
+# Execute tasks from "./pipelines/integrate/default.yml" on a CLI-based container.
 $ laracy action integrate
 
-# Starts the execution of "pipelines/integrate/frontend.yml"
-$ laracy action integrate --pipeline frontend
+# Execute tasks from "./pipelines/integrate/backend.yml" on a CLI-based container.
+$ laracy action integrate --pipeline backend
 
-# Starts the execution of "pipelines/integrate/backend.yml"
-$ laracy action integrate -p backend
+# Execute tasks from "./pipelines/integrate/frontend.yml" on a CLI-based container.
+$ laracy action integrate --pipeline frontend --build cli
+
+# Execute tasks from "./pipelines/integrate/performance.yml" on a Server-based container.
+$ laracy action integrate --pipeline performance --build server
 ```
 
 ## Do You Really Need This?

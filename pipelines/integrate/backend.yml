@@ -1,4 +1,4 @@
-- Welcome: echo \"Hello, default pipeline!\"
+- Welcome: echo \"Hello, backend pipeline!\"
 
 - Install Composer Dependencies: composer install --no-interaction --prefer-dist
 
@@ -9,11 +9,3 @@
 # - Check code formatting: php-cs-fixer fix --diff --dry-run
 
 # - Run Laravel Tests: php artisan test
-
-- Install NPM Dependencies: npm install
-
-# - Run NPM Lint: npm lint
-
-# - Run NPM Test: npm test
-
-- Compiling assets: npm run prod

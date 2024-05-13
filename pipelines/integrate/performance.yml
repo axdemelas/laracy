@@ -1,0 +1,5 @@
+- Welcome: echo \"Hello, performance pipeline!\"
+
+- Show PHP-FPM version: php-fpm --version
+
+- Show Nginx version: nginx -v

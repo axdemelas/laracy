@@ -1,0 +1,9 @@
+- Welcome: echo \"Hello, frontend pipeline!\"
+
+- Install NPM Dependencies: npm install
+
+# - Run NPM Lint: npm lint
+
+# - Run NPM Test: npm test
+
+- Compiling assets: npm run prod

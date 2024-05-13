@@ -28,3 +28,23 @@ services:
       - server
     volumes:
       - ${SOURCE_PATH:-./src}:/var/www/html/laravel
+  laracy_integrate_cli:
+    container_name: laracy_integrate_cli
+    build:
+      context: ./docker/cli
+      dockerfile: Dockerfile
+      target: laracy_integrate_cli
+      additional_contexts:
+        source_path: ${SOURCE_PATH:-./src}
+    profiles:
+      - integrate_cli
+  laracy_integrate_server:
+    container_name: laracy_integrate_server
+    build:
+      context: ./docker/server
+      dockerfile: Dockerfile
+      target: laracy_integrate_server
+      additional_contexts:
+        source_path: ${SOURCE_PATH:-./src}
+    profiles:
+      - integrate_server

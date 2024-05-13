@@ -22,3 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 CMD ["echo", "Hey! There's nothing to start. Type: laracy -h"]
+
+FROM laracy_cli AS laracy_integrate_cli
+
+COPY --from=source_path . .
+
+CMD [ "tail", "-f", "/dev/null" ]

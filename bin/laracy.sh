@@ -14,9 +14,6 @@ function action() {
   "integrate")
     sh "$bin_folder/action-integrate.sh" ${@:2}
     ;;
-  "deploy")
-    sh "$bin_folder/action-deploy.sh" ${@:2}
-    ;;
   *)
     echo "Invalid action."
     ;;
