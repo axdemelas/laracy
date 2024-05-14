@@ -9,22 +9,22 @@ build=cli
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --pipeline|-p)
-            shift
-            pipeline="$1"
-            ;;
-        --pipeline=*|-p=*)
-            pipeline="${1#*=}"
-            ;;
-        --build|-b)
-            shift
-            build="$1"
-            ;;
-        --build=*|-b=*)
-            build="${1#*=}"
-            ;;
-        *) # Ignore other arguments
-            ;;
+    --pipeline | -p)
+        shift
+        pipeline="$1"
+        ;;
+    --pipeline=* | -p=*)
+        pipeline="${1#*=}"
+        ;;
+    --build | -b)
+        shift
+        build="$1"
+        ;;
+    --build=* | -b=*)
+        build="${1#*=}"
+        ;;
+    *) # Ignore other arguments
+        ;;
     esac
     shift
 done
@@ -79,8 +79,8 @@ printf "\n${primary_color}${bold}Laracy Integrate:${end_bold}${end_color} Execut
 
 docker compose -f "$compose_file" --profile integrate_$build up laracy_integrate_$build -d --build
 
-for ((i=0; i<${#steps_array[@]}; i++)); do
-    number=$(( $i + 1 ))
+for ((i = 0; i < ${#steps_array[@]}; i++)); do
+    number=$(($i + 1))
     step=${steps_array[$i]}
     command="${commands_array[$i]}"
 

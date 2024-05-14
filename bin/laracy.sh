@@ -34,12 +34,43 @@ function run() {
   part1="${args% -- *}"
   part2="${args#* -- }"
 
-  if [[ $part1 == $part2 ]]; then
-    docker compose -f "$compose_file" run --rm laracy_cli $@
-  else
-    docker compose -f "$compose_file" run --rm \
-      $part1 laracy_cli $part2
+  if [[ $part1 != $part2 ]]; then
+    docker compose -f "$compose_file" run --rm $part1 laracy_cli $part2
+    return
   fi
+
+  if [[ $args == "php artisan serve"* ]]; then
+    port="8000"
+    host="0.0.0.0"
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+      --port)
+        shift
+        port="$1"
+        ;;
+      --port=*)
+        port="${1#*=}"
+        ;;
+      --host)
+        shift
+        host="$1"
+        ;;
+      --host=*)
+        host="${1#*=}"
+        ;;
+      *)
+        ;;
+      esac
+      shift
+    done
+
+    docker compose -f "$compose_file" run --rm -p $port:$port laracy_cli \
+      php artisan serve --host=$host --port=$port
+    return
+  fi
+
+  docker compose -f "$compose_file" run --rm laracy_cli $args
 }
 
 function help() {

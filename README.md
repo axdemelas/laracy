@@ -1,22 +1,26 @@
 # Laracy
 
-Handy CLI for working with legacy Laravel projects.
+### Handy CLI for working with legacy Laravel projects
+
+This is an **experimental** repository that abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
 
 ## Why?
 
-Suppose you want to contribute on a Laravel project that relies on PHP 7.3 and Node.js v16 (e.g. Laravel 5.x) but you don't have these installed.
+Suppose you want to contribute to a Laravel project that relies on system requirements that don't match with your local environment (e.g., Laravel <= 8.x).
 
-For this case you can use [Laradock](https://laradock.io/) or just:
+For this case, you can use [Laradock](https://laradock.io/) or simply:
 
 ```sh
-$ git clone https://github.com/axdemelas/laracy && cd laracy
+$ cd /path/to/legacy-laravel-project
 
-$ mv /path/to/laravel-legacy-project src
+$ git clone https://github.com/axdemelas/laracy
+
+$ echo SOURCE_PATH=../ > laracy/.env
 
 $ laracy composer install
 $ laracy npm install
 $ laracy npm run dev
-$ laracy -p 8000:8000 -- php artisan serve
+$ laracy php artisan serve
 ```
 
 ## Getting Started
@@ -24,16 +28,18 @@ $ laracy -p 8000:8000 -- php artisan serve
 Add the `laracy` shell alias to your `.zshrc` or `.bashrc`:
 
 ```sh
-alias laracy='$(
-  if [ -f laracy/bin/laracy.sh ]; then echo laracy/bin/laracy.sh; \
-  elif [ -f ../laracy/bin/laracy.sh ]; then echo ../laracy/bin/laracy.sh; \
-  elif [ -f ../bin/laracy.sh ]; then echo ../bin/laracy.sh; \
-  else echo bin/laracy.sh; \
-  fi \
-)'
-```
+alias laracy='laracy/bin/laracy.sh'
 
-> This ensures `laracy` to work under multiple folder structures. Feel free to change it.
+# To ensure `laracy` command under multiple folder structures use instead:
+#
+# alias laracy='$(
+#   if [ -f laracy/bin/laracy.sh ]; then echo laracy/bin/laracy.sh; \
+#   elif [ -f ../laracy/bin/laracy.sh ]; then echo ../laracy/bin/laracy.sh; \
+#   elif [ -f ../bin/laracy.sh ]; then echo ../bin/laracy.sh; \
+#   else echo bin/laracy.sh; \
+#   fi \
+# )'
+```
 
 Reload the terminal and try it out:
 
@@ -57,12 +63,15 @@ $ laracy composer install
 $ laracy npm install
 $ laracy npm run prod
 
+# Start Laravel's development server on "http://0.0.0.0:8000"
+$ laracy php artisan serve
+
 # Use "--" as a separator for specifying Docker Compose Run options.
 # For example, to publish a given port:
-$ laracy -p 8000:8000 -- php -S 0.0.0.0:8000 -t public
+$ laracy -p 8001:8001 -- php -S 0.0.0.0:8001 -t public
 
 # Running detached:
-$ laracy -d -p 8000:8000 -- php artisan serve
+$ laracy -d -p 8000:8000 -- php artisan serve --host=0.0.0.0
 
 # Use docker commands to view logs and stop the detached containers.
 # For example:
@@ -96,8 +105,8 @@ $ laracy server down
 Create a `.env` file in the root of the project and set the variables:
 
 ```dotenv
-# Path to the Laravel app.
-SOURCE_PATH=./my-custom-dir
+# Path to the root of Laravel app.
+SOURCE_PATH=./my-laravel-project
 
 # PHP CLI version.
 PHP_CLI_VERSION=7.3
@@ -152,9 +161,9 @@ $ docker compose exec laracy_server sh -c "php-fpm -v"
 
 ## Creating Local CI Pipelines
 
-You can define and run CI Pipelines bounded to the `laracy` CLI and Server containers.
+You can define and run simple CI Pipelines bounded to the CLI and Server containers.
 
-First, create a simple YML file under `./pipelines/integrate` directory describing the steps for automated execution. For example:
+First, create a YML file under `./pipelines/integrate` directory describing the steps for automated execution. For example:
 
 ```yml
 - Welcome: echo \"Hello, default pipeline!\"
@@ -224,8 +233,8 @@ $ laracy action integrate --pipeline performance --build server
 
 ## Do You Really Need This?
 
-Probably not. This is an **experimental** repository.
-
-It simply abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
+Probably not.
 
 However, if you're an advanced user who doesn't want to waste time configuring the development environment, you may find this useful.
+
+Also, ensure to keep your Laravel framework on the long-term support version for essential bug and security fixes.
