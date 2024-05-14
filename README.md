@@ -1,8 +1,8 @@
 # Laracy
 
-### Handy CLI for working with legacy Laravel projects
+Handy CLI for working with legacy Laravel projects.
 
-This is an **experimental** repository that abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
+> This is an experimental repository that abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
 
 ## Why?
 
