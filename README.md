@@ -2,8 +2,6 @@
 
 Handy CLI for working with legacy Laravel projects.
 
-> This is an experimental repository that abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
-
 ## Why?
 
 Suppose you want to contribute to a Laravel project that relies on system requirements that don't match with your local environment (e.g., Laravel <= 8.x).
@@ -22,6 +20,8 @@ $ laracy npm install
 $ laracy npm run dev
 $ laracy php artisan serve
 ```
+
+> This is an **experimental** repository that abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
 
 ## Getting Started
 
