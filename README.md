@@ -37,7 +37,7 @@ $ laracy php artisan serve
 $ curl http://0.0.0.0:8000
 ```
 
-The above commands create a development environment with PHP 7.3 (cli), `gd` and `xdebug` extensions, latest Composer version, and Node v16.
+The instructions above create a development environment with PHP 7.3 (cli), `gd` and `xdebug` extensions, latest Composer version, and Node v16.
 
 If you want to create a PHP-FPM/Nginx environment, use:
 
@@ -55,28 +55,6 @@ $ curl http://0.0.0.0:80
 ```
 
 ## Getting Started
-
-Make `laracy` shell alias persistent adding it to your *.zshrc* or *.bashrc*:
-
-```sh
-alias laracy='laracy/bin/cli.sh'
-
-# To ensure `laracy` command under multiple folder structures use instead:
-#
-# alias laracy='$(
-#   if [ -f laracy/bin/cli.sh ]; then echo laracy/bin/cli.sh; \
-#   elif [ -f ../laracy/bin/cli.sh ]; then echo ../laracy/bin/cli.sh; \
-#   elif [ -f ../bin/cli.sh ]; then echo ../bin/cli.sh; \
-#   else echo bin/cli.sh; \
-#   fi \
-# )'
-```
-
-Reload the terminal and check:
-
-```
-$ laracy help
-```
 
 ## Common Commands
 
@@ -190,6 +168,30 @@ $ docker compose exec laracy_server sh -c "php-fpm -v"
 # PHP 7.1 (fpm)
 ```
 
+## Persistent Shell Alias
+
+Add a laracy alias to `.zshrc` or `.bashrc`:
+
+```sh
+alias laracy='laracy/bin/cli.sh'
+
+# To ensure `laracy` command under multiple folder structures use instead:
+#
+# alias laracy='$(
+#   if [ -f laracy/bin/cli.sh ]; then echo laracy/bin/cli.sh; \
+#   elif [ -f ../laracy/bin/cli.sh ]; then echo ../laracy/bin/cli.sh; \
+#   elif [ -f ../bin/cli.sh ]; then echo ../bin/cli.sh; \
+#   else echo bin/cli.sh; \
+#   fi \
+# )'
+```
+
+Reload the terminal and check:
+
+```
+$ laracy help
+```
+
 ## Continuous Integration Playground
 
 You can define and run simple CI Pipelines bounded to the CLI and Server containers.
@@ -262,7 +264,9 @@ $ laracy action integrate
 # Laracy Integrate: Execution of default pipeline has finished!
 ```
 
-You may want to ignore folders like `./vendor`, `./node_modules` and `./laracy` from host when building the image for CI. To do so, add a *.dockerignore* on Laravel app root:
+The `action integrate` command constructs an isolated container using CLI or Server based images, with a copy of the Laravel code. None of the side-effects of the steps should persist beyond the execution.
+
+Also, when creating the image for CI, you may wish to ignore host folders such as `./vendor`, `./node_modules`, and `./laracy`. To achieve this, add a `.dockerignore` file to the root directory of your Laravel application:
 
 ```
 vendor
