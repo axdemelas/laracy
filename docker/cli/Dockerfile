@@ -1,5 +1,5 @@
-ARG PHP_CLI_VERSION=7.3
-FROM php:${PHP_CLI_VERSION}-cli AS laracy_cli
+ARG PHP_VERSION=7.3
+FROM php:${PHP_VERSION}-cli AS laracy_cli
 
 WORKDIR /app
 
@@ -7,8 +7,8 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-ARG PHP_CLI_EXTENSIONS
-RUN if [ -n "$PHP_CLI_EXTENSIONS" ]; then install-php-extensions $PHP_CLI_EXTENSIONS; fi
+ARG PHP_EXTENSIONS
+RUN if [ -n "$PHP_EXTENSIONS" ]; then install-php-extensions $PHP_EXTENSIONS; fi
 
 ARG NODE_VERSION=16
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -

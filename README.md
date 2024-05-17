@@ -1,47 +1,78 @@
 # Laracy
 
-Handy CLI for working with legacy Laravel projects.
+Handy CLI for interacting with Laravel projects via [Docker Compose](https://docs.docker.com/compose/).
 
 ## Why?
 
-Suppose you want to contribute to a Laravel project that relies on system requirements that don't match with your local environment (e.g., Laravel <= 8.x).
+Suppose you want to contribute to a Laravel project that relies on system requirements that don't match with your local environment nor have [Sail](https://laravel.com/docs/11.x/sail) available.
+
+```sh
+$ cd /path/to/laravel-project
+
+$ php artisan serve
+# command not found: php
+```
 
 For this case, you can use [Laradock](https://laradock.io/) or simply:
 
 ```sh
-$ cd /path/to/legacy-laravel-project
-
 $ git clone https://github.com/axdemelas/laracy
 
-$ echo SOURCE_PATH=../ > laracy/.env
+# Set the enviroment:
+$ echo LARAVEL_ROOT=../ >> laracy/.env
+$ echo PHP_VERSION=7.3 >> laracy/.env
+$ echo NODE_VERSION=16 >> laracy/.env
+$ echo PHP_EXTENSIONS='gd xdebug' >> laracy/.env
 
+# Make CLI available:
+$ alias laracy='laracy/bin/cli.sh'
+
+# Install dependencies and run the application:
 $ laracy composer install
 $ laracy npm install
 $ laracy npm run dev
 $ laracy php artisan serve
+
+# Try it out:
+$ curl http://0.0.0.0:8000
 ```
 
-> This is an **experimental** repository that abstracts [Docker Compose](https://docs.docker.com/compose/) containers for older versions of Laravel where [Sail](https://laravel.com/docs/11.x) is not available.
+The above commands create a development environment with PHP 7.3 (cli), `gd` and `xdebug` extensions, latest Composer version, and Node v16.
+
+If you want to create a PHP-FPM/Nginx environment, use:
+
+```sh
+# Set the enviroment:
+$ echo PHP_FPM_VERSION=7.3 >> laracy/.env
+$ echo PHP_FPM_EXTENSIONS='gd' >> laracy/.env
+$ echo NGINX_PORT=80 >> laracy/.env
+
+# Start HTTP serving:
+$ laracy server up
+
+# Try it out:
+$ curl http://0.0.0.0:80
+```
 
 ## Getting Started
 
-Add the `laracy` shell alias to your `.zshrc` or `.bashrc`:
+Make `laracy` shell alias persistent adding it to your *.zshrc* or *.bashrc*:
 
 ```sh
-alias laracy='laracy/bin/laracy.sh'
+alias laracy='laracy/bin/cli.sh'
 
 # To ensure `laracy` command under multiple folder structures use instead:
 #
 # alias laracy='$(
-#   if [ -f laracy/bin/laracy.sh ]; then echo laracy/bin/laracy.sh; \
-#   elif [ -f ../laracy/bin/laracy.sh ]; then echo ../laracy/bin/laracy.sh; \
-#   elif [ -f ../bin/laracy.sh ]; then echo ../bin/laracy.sh; \
-#   else echo bin/laracy.sh; \
+#   if [ -f laracy/bin/cli.sh ]; then echo laracy/bin/cli.sh; \
+#   elif [ -f ../laracy/bin/cli.sh ]; then echo ../laracy/bin/cli.sh; \
+#   elif [ -f ../bin/cli.sh ]; then echo ../bin/cli.sh; \
+#   else echo bin/cli.sh; \
 #   fi \
 # )'
 ```
 
-Reload the terminal and try it out:
+Reload the terminal and check:
 
 ```
 $ laracy help
@@ -106,10 +137,10 @@ Create a `.env` file in the root of the project and set the variables:
 
 ```dotenv
 # Path to the root of Laravel app.
-SOURCE_PATH=./my-laravel-project
+LARAVEL_ROOT=./my-laravel-root
 
 # PHP CLI version.
-PHP_CLI_VERSION=7.3
+PHP_VERSION=7.3
 
 # PHP FPM version.
 PHP_FPM_VERSION=7.3
@@ -119,7 +150,7 @@ NODE_VERSION=16
 
 # List of PHP extensions to be installed on CLI.
 # Refer: https://github.com/mlocati/docker-php-extension-installer
-PHP_CLI_EXTENSIONS=gd xdebug
+PHP_EXTENSIONS=gd xdebug
 
 # List of PHP extensions to be installed on PHP-FPM.
 # Refer: https://github.com/mlocati/docker-php-extension-installer
@@ -135,7 +166,7 @@ Then rebuild necessary images (CLI and/or Server). For example:
 $ laracy php -v
 # PHP 7.3 (cli)
 
-$ PHP_CLI_VERSION=7.1 laracy cli build
+$ PHP_VERSION=7.1 laracy cli build
 
 $ laracy php -v
 # PHP 7.1 (cli)
@@ -159,7 +190,7 @@ $ docker compose exec laracy_server sh -c "php-fpm -v"
 # PHP 7.1 (fpm)
 ```
 
-## Creating Local CI Pipelines
+## Continuous Integration Playground
 
 You can define and run simple CI Pipelines bounded to the CLI and Server containers.
 
@@ -167,6 +198,10 @@ First, create a YML file under `./pipelines/integrate` directory describing the 
 
 ```yml
 - Welcome: echo \"Hello, default pipeline!\"
+
+- Check PHP Version: php -v
+
+- Check Node Version: node -v
 
 - Install Composer Dependencies: composer install --no-interaction --prefer-dist
 
@@ -192,25 +227,47 @@ And then execute:
 ```sh
 $ laracy action integrate
 
-# Laracy Integrate: Executing default pipeline with 4 steps on a cli-based image
-
+# Laracy Integrate: Executing default pipeline with 6 steps on a cli-based image
+#
+# ------------------------------------------
 # Step 1: Welcome
-# ...
+#   Hello, default pipeline!
 # Step 1: Completed
-
-# Step 2: Install Composer Dependencies
-# ...
+#
+# ------------------------------------------
+# Step 2: Check PHP Version
+#   PHP 7.3.33 (cli)
 # Step 2: Completed
-
-# Step 3: Install NPM Dependencies
-# ...
+#
+# ------------------------------------------
+# Step 3: Check Node Version
+#   v16.20.2
 # Step 3: Completed
-
-# Step 4: Compiling assets
-# ...
+#
+# ------------------------------------------
+# Step 4: Install Composer Dependencies
+#   [...]
 # Step 4: Completed
-
+#
+# ------------------------------------------
+# Step 5: Install NPM Dependencies
+#   [...]
+# Step 5: Completed
+#
+# ------------------------------------------
+# Step 6: Compiling assets
+#   [...]
+# Step 6: Completed
+#
 # Laracy Integrate: Execution of default pipeline has finished!
+```
+
+You may want to ignore folders like `./vendor`, `./node_modules` and `./laracy` from host when building the image for CI. To do so, add a *.dockerignore* on Laravel app root:
+
+```
+vendor
+node_modules
+laracy
 ```
 
 ### Custom Pipelines
@@ -231,10 +288,8 @@ $ laracy action integrate --pipeline frontend --build cli
 $ laracy action integrate --pipeline performance --build server
 ```
 
-## Do You Really Need This?
+## Do You Really Need This Repository?
 
-Probably not.
+Probably not. It is **experimental**.
 
-However, if you're an advanced user who doesn't want to waste time configuring the development environment, you may find this useful.
-
-Also, ensure to keep your Laravel framework on the long-term support version for essential bug and security fixes.
+However, if you're an advanced user who doesn't want to waste time configuring the development environment for Laravel projects where [Sail](https://laravel.com/docs/11.x/sail) is not available, you may find this useful.

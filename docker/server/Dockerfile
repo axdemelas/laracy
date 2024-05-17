@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y nginx \
     ; \
     rm -rf /var/lib/apt/lists/*
 
+RUN rm /etc/nginx/sites-enabled/default
+
 COPY ./proxy/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY ./fpm/zz-docker.conf /usr/local/etc/php-fpm.d

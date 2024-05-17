@@ -1,19 +1,25 @@
 - Welcome: echo \"Hello, default pipeline!\"
 
-- Install Composer Dependencies: composer install --no-interaction --prefer-dist
+- List Application Folder: ls /app
 
-# - Run static analysis with PHPStan: /app/vendor/bin/phpstan analyze
+# - Check PHP Version: php -v
 
-# - Check linting: php artisan lint
+# - Check Node Version: node -v
 
-# - Check code formatting: php-cs-fixer fix --diff --dry-run
+# - Install Composer Dependencies: composer install --no-interaction --prefer-dist
 
-# - Run Laravel Tests: php artisan test
+# # - Run static analysis with PHPStan: /app/vendor/bin/phpstan analyze
 
-- Install NPM Dependencies: npm install
+# # - Check linting: php artisan lint
 
-# - Run NPM Lint: npm lint
+# # - Check code formatting: php-cs-fixer fix --diff --dry-run
 
-# - Run NPM Test: npm test
+# # - Run Laravel Tests: php artisan test
 
-- Compiling assets: npm run prod
+# - Install NPM Dependencies: npm install
+
+# # - Run NPM Lint: npm lint
+
+# # - Run NPM Test: npm test
+
+# - Compiling assets: npm run prod

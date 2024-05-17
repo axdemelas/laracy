@@ -78,7 +78,7 @@ function help() {
 
   Usage: laracy COMMAND [SERVICE...]
 
-  Build, run and serve legacy Laravel projects
+  Build, run and serve Laravel projects
 
   Common Commands:
       php [OPTIONS]

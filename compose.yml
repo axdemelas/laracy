@@ -6,13 +6,13 @@ services:
       dockerfile: Dockerfile
       target: laracy_cli
       args:
-        - PHP_CLI_VERSION=${PHP_CLI_VERSION:-7.3}
+        - PHP_VERSION=${PHP_VERSION:-7.3}
         - NODE_VERSION=${NODE_VERSION:-16}
-        - PHP_CLI_EXTENSIONS=${PHP_CLI_EXTENSIONS:-}
+        - PHP_EXTENSIONS=${PHP_EXTENSIONS:-}
     profiles:
       - cli
     volumes:
-      - ${SOURCE_PATH:-./src}:/app
+      - ${LARAVEL_ROOT:-./my-laravel-root}:/app
   laracy_server:
     container_name: laracy_server
     build:
@@ -27,7 +27,7 @@ services:
     profiles:
       - server
     volumes:
-      - ${SOURCE_PATH:-./src}:/var/www/html/laravel
+      - ${LARAVEL_ROOT:-./my-laravel-root}:/var/www/html/laravel
   laracy_integrate_cli:
     container_name: laracy_integrate_cli
     build:
@@ -35,7 +35,7 @@ services:
       dockerfile: Dockerfile
       target: laracy_integrate_cli
       additional_contexts:
-        source_path: ${SOURCE_PATH:-./src}
+        source_path: ${LARAVEL_ROOT:-./my-laravel-root}
     profiles:
       - integrate_cli
   laracy_integrate_server:
@@ -45,6 +45,6 @@ services:
       dockerfile: Dockerfile
       target: laracy_integrate_server
       additional_contexts:
-        source_path: ${SOURCE_PATH:-./src}
+        source_path: ${LARAVEL_ROOT:-./my-laravel-root}
     profiles:
       - integrate_server
