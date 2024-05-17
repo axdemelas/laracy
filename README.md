@@ -54,11 +54,16 @@ $ laracy server up
 $ curl http://0.0.0.0:80
 ```
 
-## Getting Started
-
 ## Common Commands
 
 ```sh
+# |--------------------------------------------
+# | CLI Container
+# |
+# | Provides development-like interactions
+# | with the application code.
+# |--------------------------------------------
+
 $ laracy ls /app
 $ laracy php --version
 $ laracy php -m
@@ -89,17 +94,24 @@ $ laracy -d -- npm run watch
 $ docker logs [container_id] -tf
 $ docker stop [container_id]
 
-# The CLI container is responsible for the common tools available
-# on `laracy` command like PHP, Composer, Node/NPM, Python, etc.
-# To manipulate it use:
+# If you change the value of a environment variable you need to
+# rebuild the CLI image:
 $ laracy cli build
 $ laracy cli build --no-cache
-$ laracy cli up
+
+# To stop/remove long-running commands:
 $ laracy cli stop
 $ laracy cli down
 
-# The Server is a container for HTTP serving with PHP-FPM and
-# Nginx as reverse proxy. To manipulate it:
+# |--------------------------------------------
+# | Server Container
+# |
+# | Provides a production-like environment to
+# | serve the application code.
+# |--------------------------------------------
+
+# To manipulate an instance of PHP-FPM and Nginx as reverse proxy
+# communicating via unix socket:
 $ laracy server build
 $ laracy server build --no-cache
 $ laracy server up
@@ -115,7 +127,7 @@ Create a `.env` file in the root of the project and set the variables:
 
 ```dotenv
 # Path to the root of Laravel app.
-LARAVEL_ROOT=./my-laravel-root
+LARAVEL_ROOT=./my-laravel-project
 
 # PHP CLI version.
 PHP_VERSION=7.3

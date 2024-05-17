@@ -12,7 +12,7 @@ services:
     profiles:
       - cli
     volumes:
-      - ${LARAVEL_ROOT:-./my-laravel-root}:/app
+      - ${LARAVEL_ROOT:-./my-laravel-project}:/app
   laracy_server:
     container_name: laracy_server
     build:
@@ -27,7 +27,7 @@ services:
     profiles:
       - server
     volumes:
-      - ${LARAVEL_ROOT:-./my-laravel-root}:/var/www/html/laravel
+      - ${LARAVEL_ROOT:-./my-laravel-project}:/var/www/html/laravel
   laracy_integrate_cli:
     container_name: laracy_integrate_cli
     build:
@@ -35,7 +35,7 @@ services:
       dockerfile: Dockerfile
       target: laracy_integrate_cli
       additional_contexts:
-        source_path: ${LARAVEL_ROOT:-./my-laravel-root}
+        source_path: ${LARAVEL_ROOT:-./my-laravel-project}
     profiles:
       - integrate_cli
   laracy_integrate_server:
@@ -45,6 +45,6 @@ services:
       dockerfile: Dockerfile
       target: laracy_integrate_server
       additional_contexts:
-        source_path: ${LARAVEL_ROOT:-./my-laravel-root}
+        source_path: ${LARAVEL_ROOT:-./my-laravel-project}
     profiles:
       - integrate_server
